@@ -146,7 +146,7 @@
       function validarCampo($campo) {
         const vacio = $.trim($campo.val()) === "";
         const esEmail = $campo.attr("type") === "email";
-        const emailInvalido = esEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($campo.val()); // regex basica de email
+        const emailInvalido = esEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($campo.val());
         const invalido = vacio || emailInvalido;
         $campo.toggleClass("campo-invalido", invalido); // añade o quita la clase segun si es valido
         return !invalido; // devuelve true si esta bien
