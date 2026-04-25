@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto - Catálogo</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- navbar con "activo" en Contacto -->
+  <nav class="navegacion">
+    <a class="navegacion-logo" href="index.html">Catálogo</a>
+    <ul class="navegacion-enlaces">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="catalogo.html">Coches</a></li>
+      <li><a href="contacto.html" class="activo">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- cabecera igual que en catalogo pero con otro texto -->
+  <header class="cabecera-pagina">
+    <div class="contenedor">
+      <h1>Hablemos</h1>
+      <p>Sin compromisos, solo cuéntanos qué necesitas</p>
+    </div>
+  </header>
+
+  <!-- =============================================
+       SECCION PRINCIPAL
+       dos columnas: a la izquierda los datos de
+       contacto y a la derecha el formulario.
+       en movil se apilan en una sola columna
+       gracias al media query del css
+  ============================================= -->
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="fila-contacto">
+
+        <!-- columna izquierda: telefono, email y direccion -->
+        <div>
+          <h4>¿Prefieres llamar?</h4>
+          <p style="color:#666; margin-top:0.5rem">Lunes–viernes de 9 a 20 h. Sábados de 10 a 14 h.</p>
+          <ul class="lista-contacto">
+            <li>📞 +34 912 345 678 <span>Lunes–viernes, 9–20 h · Sábados, 10–14 h</span></li>
+            <li>✉️ info@autocatalogo.es <span>Respondemos en menos de 24 h</span></li>
+            <li>📍 Calle Motor 12, Madrid <span>Puedes venir a vernos también</span></li>
+          </ul>
+        </div>
+
+        <!-- =============================================
+             FORMULARIO
+             jquery intercepta el submit para que la
+             pagina no se recargue y valida los campos.
+             obligatorios: nombre, email, asunto, mensaje.
+             el telefono es opcional.
+        ============================================= -->
+        <div>
+          <form id="formulario-contacto">
+            <div class="fila-dos-columnas">
+
+              <!-- campo nombre, obligatorio -->
+              <div class="grupo-campo">
+                <label for="campo-nombre">Nombre</label>
+                <input type="text" id="campo-nombre" class="campo-texto" placeholder="¿Cómo te llamas?" />
+                <!-- este span solo se ve cuando el campo tiene clase "campo-invalido" -->
+                <span class="error-campo">Dinos tu nombre.</span>
+              </div>
+
+              <!-- campo email, obligatorio y con validacion de formato -->
+              <div class="grupo-campo">
+                <label for="campo-email">Email</label>
+                <input type="email" id="campo-email" class="campo-texto" placeholder="para poder responderte" />
+                <span class="error-campo">El email no parece correcto.</span>
+              </div>
+
+              <!-- telefono, no es obligatorio -->
+              <div class="grupo-campo">
+                <label for="campo-telefono">Teléfono <small style="color:#aaa">(opcional)</small></label>
+                <input type="tel" id="campo-telefono" class="campo-texto" placeholder="600 000 000" />
+              </div>
+
+              <!-- select del asunto, obligatorio -->
+              <div class="grupo-campo">
+                <label for="campo-asunto">¿En qué podemos ayudarte?</label>
+                <select id="campo-asunto" class="campo-select">
+                  <option value="">Selecciona...</option>
+                  <option>Información sobre un coche</option>
+                  <option>Quiero probarlo</option>
+                  <option>Opciones de financiación</option>
+                  <option>Otra cosa</option>
+                </select>
+                <span class="error-campo">Elige un asunto.</span>
+              </div>
+
+              <!-- textarea del mensaje, ocupa todo el ancho -->
+              <div class="grupo-campo ancho-completo">
+                <label for="campo-mensaje">Cuéntanos</label>
+                <textarea id="campo-mensaje" class="campo-textarea" rows="4" placeholder="Lo que necesites saber..."></textarea>
+                <span class="error-campo">Escríbenos algo.</span>
+              </div>
+
+              <!-- boton de enviar -->
+              <div class="grupo-campo ancho-completo">
+                <button type="submit" class="boton boton-rojo">Enviar mensaje</button>
+              </div>
+
+            </div>
+          </form>
+
+          <!-- =============================================
+               MENSAJE DE EXITO
+               esta oculto por defecto.
+               jquery lo muestra con .show() cuando
+               el formulario se envia bien y oculta
+               el formulario con .hide() al mismo tiempo
+          ============================================= -->
+          <div class="mensaje-exito" id="mensaje-exito">
+            ✅ Recibido, gracias. Te respondemos pronto.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="pie-pagina">
+    <div class="contenedor">
+      <strong>Catálogo</strong>
+      <p>Proyecto educativo · HTML, CSS y JavaScript</p>
+    </div>
+  </footer>
+
+  <!-- no cargamos coches.js porque en esta pagina no lo necesitamos -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    $(function () {
+
+      // -----------------------------------------------
+      // validarCampo($campo)
+      // comprueba si un campo esta vacio o si el email
+      // tiene un formato raro. si es invalido le pone
+      // la clase "campo-invalido" que en el css activa
+      // el borde rojo y muestra el mensaje de error
+      // -----------------------------------------------
+      function validarCampo($campo) {
+        const vacio = $.trim($campo.val()) === "";
+        const esEmail = $campo.attr("type") === "email";
+        const emailInvalido = esEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($campo.val()); // regex basica de email
+        const invalido = vacio || emailInvalido;
+        $campo.toggleClass("campo-invalido", invalido); // añade o quita la clase segun si es valido
+        return !invalido; // devuelve true si esta bien
+      }
+
+      // -----------------------------------------------
+      // evento submit del formulario
+      // validamos todo antes de "enviar".
+      // si hay errores se marcan en rojo.
+      // si esta todo bien ocultamos el form y
+      // mostramos el mensaje de confirmacion
+      // -----------------------------------------------
+      $("#formulario-contacto").on("submit", function (e) {
+        e.preventDefault(); // para que no recargue la pagina al darle a enviar
+
+        const camposObligatorios = [
+          $("#campo-nombre"),
+          $("#campo-email"),
+          $("#campo-asunto"),
+          $("#campo-mensaje")
+        ];
+
+        // validamos cada campo y comprobamos que todos sean true
+        const todosValidos = camposObligatorios.map(validarCampo).every(Boolean);
+
+        if (todosValidos) {
+          $(this).hide();             // ocultamos el formulario
+          $("#mensaje-exito").show(); // mostramos el mensaje de gracias
+        }
+      });
+
+      // quita el error del campo mientras el usuario escribe
+      // para que no se quede el rojo si ya lo esta arreglando
+      $(".campo-texto, .campo-select, .campo-textarea").on("input change", function () {
+        $(this).removeClass("campo-invalido");
+      });
+
+    });
+  </script>
+</body>
+</html>
