@@ -1,0 +1,145 @@
+  <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo</title>
+
+  <!-- el css nuestro, sin bootstrap ni nada de eso -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- =============================================
+       NAVBAR
+       esto es la barra de arriba que se queda fija
+       cuando haces scroll. tiene el logo y los enlaces
+       a las 3 paginas. el que tiene clase "activo"
+       se ve mas blanco para saber en que pagina estas
+  ============================================= -->
+  <nav class="navegacion">
+    <a class="navegacion-logo" href="index.html">Catálogo</a>
+    <ul class="navegacion-enlaces">
+      <li><a href="index.html" class="activo">Inicio</a></li>
+      <li><a href="catalogo.html">Coches</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- =============================================
+       PORTADA (la parte grande de arriba)
+       ocupa casi toda la pantalla al entrar.
+       tiene una foto de coche de fondo con un
+       filtro oscuro encima para que se lea el texto.
+       el boton rojo lleva directo al catalogo
+  ============================================= -->
+  <section class="portada">
+    <div class="contenedor">
+      <h1 class="portada-titulo">Encuentra el que<br>estás buscando</h1>
+      <p class="portada-subtitulo">Coches nuevos y de ocasión con toda la información que necesitas.</p>
+      <a href="catalogo.html" class="boton boton-rojo">Ver todos los coches</a>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SECCION DE LAS 3 VENTAJAS
+       fondo gris para que no sea todo blanco.
+       son 3 cajitas con emoji, titulo y texto corto
+       explicando por que mola el sitio.
+       el grid se adapta solo segun el tamaño de pantalla
+  ============================================= -->
+  <section class="seccion seccion-gris">
+    <div class="contenedor">
+      <div class="fila-ventajas">
+        <div class="ventaja">
+          <div class="ventaja-icono">👁</div>
+          <h5>Sin letra pequeña</h5>
+          <p>Precio real, kilómetros reales. Lo que ves es lo que hay.</p>
+        </div>
+        <div class="ventaja">
+          <div class="ventaja-icono">🤝</div>
+          <h5>Te asesoramos sin presión</h5>
+          <p>Puedes preguntar lo que quieras, sin compromisos.</p>
+        </div>
+        <div class="ventaja">
+          <div class="ventaja-icono">🛡</div>
+          <h5>Revisados antes de salir</h5>
+          <p>Cada coche pasa una revisión antes de estar en el catálogo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       COCHES DESTACADOS
+       aqui aparecen solo los coches que tienen
+       destacado: true en el archivo coches.js.
+       la rejilla empieza vacia y jquery la rellena
+       cuando carga la pagina (mira el script de abajo).
+       el boton del final lleva al catalogo completo
+  ============================================= -->
+  <section class="seccion">
+    <div class="contenedor">
+      <h2 style="margin-bottom:0.25rem">Algunos que nos gustan</h2>
+      <p style="color:#888; margin-bottom:2rem">Los que más se están mirando esta semana.</p>
+
+      <!-- aqui mete jquery las tarjetas, empieza vacio -->
+      <div class="rejilla-coches" id="rejilla-destacados"></div>
+
+      <div style="text-align:center; margin-top:2rem">
+        <a href="catalogo.html" class="boton boton-borde">Ver el catálogo completo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer tipico de abajo, fondo oscuro y centrado -->
+  <footer class="pie-pagina">
+    <div class="contenedor">
+      <strong>Catálogo</strong>
+      <p>Proyecto educativo · HTML, CSS y JavaScript</p>
+    </div>
+  </footer>
+
+  <!-- =============================================
+       SCRIPTS
+       primero cargamos jquery desde internet,
+       luego coches.js que tiene el array con todos
+       los coches, y por ultimo el codigo que genera
+       las tarjetas de los destacados
+  ============================================= -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/coches.js"></script>
+  <script>
+    // esto es el "espera a que cargue la pagina" de jquery
+    $(function () {
+
+      // filtramos solo los que tienen destacado: true
+      // y por cada uno creamos su tarjeta en html
+      $.each(coches.filter(c => c.destacado), function (i, c) {
+
+        // si km es 0 ponemos "Nuevo", si no formateamos el numero con puntos
+        const km = c.km === 0 ? "Nuevo" : c.km.toLocaleString("es-ES") + " km";
+
+        // .append() mete la tarjeta dentro del div de la rejilla
+        $("#rejilla-destacados").append(`
+          <div class="tarjeta-coche">
+            <div class="tarjeta-imagen-envoltorio">
+              <img src="${c.imagen}" class="imagen-coche" alt="${c.marca} ${c.modelo}" />
+              <!-- etiqueta pequeña con el combustible encima de la foto -->
+              <span class="etiqueta-combustible">${c.combustible}</span>
+            </div>
+            <div class="tarjeta-cuerpo">
+              <div class="tarjeta-marca">${c.marca}</div>
+              <div class="tarjeta-modelo">${c.modelo}</div>
+              <div class="tarjeta-datos">${c.año} · ${c.potencia} CV · ${km}</div>
+              <div class="tarjeta-pie">
+                <span class="tarjeta-precio">${c.precio.toLocaleString("es-ES")} €</span>
+                <a href="catalogo.html" class="boton boton-oscuro boton-pequeno">Ver más</a>
+              </div>
+            </div>
+          </div>`);
+      });
+    });
+  </script>
+</body>
+</html>
