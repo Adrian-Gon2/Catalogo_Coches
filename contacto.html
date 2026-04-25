@@ -42,9 +42,9 @@
           <h4>¿Prefieres llamar?</h4>
           <p style="color:#666; margin-top:0.5rem">Lunes–viernes de 9 a 20 h. Sábados de 10 a 14 h.</p>
           <ul class="lista-contacto">
-            <li>📞 +34 912 345 678 <span>Lunes–viernes, 9–20 h · Sábados, 10–14 h</span></li>
-            <li>✉️ info@autocatalogo.es <span>Respondemos en menos de 24 h</span></li>
-            <li>📍 Calle Motor 12, Madrid <span>Puedes venir a vernos también</span></li>
+            <li>☏ +34 912 345 678 <span>Lunes–viernes, 9–20 h · Sábados, 10–14 h</span></li>
+            <li>📪 info@autocatalogo.es <span>Respondemos en menos de 24 h</span></li>
+            <li>📌 Calle Motor 12, Madrid <span>Puedes venir a vernos también</span></li>
           </ul>
         </div>
 
@@ -176,12 +176,6 @@
           $(this).hide();             // ocultamos el formulario
           $("#mensaje-exito").show(); // mostramos el mensaje de gracias
         }
-      });
-
-      // quita el error del campo mientras el usuario escribe
-      // para que no se quede el rojo si ya lo esta arreglando
-      $(".campo-texto, .campo-select, .campo-textarea").on("input change", function () {
-        $(this).removeClass("campo-invalido");
       });
 
     });
