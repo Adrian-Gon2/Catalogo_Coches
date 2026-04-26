@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coches - Catálogo</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- navbar igual que en index pero "activo" esta en Coches -->
+  <nav class="navegacion">
+    <a class="navegacion-logo" href="index.html">Catálogo</a>
+    <ul class="navegacion-enlaces">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="catalogo.html" class="activo">Coches</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- =============================================
+       CABECERA DE LA PAGINA
+       un banner mas pequeño que la portada del inicio.
+       solo tiene titulo y subtitulo sobre foto de fondo
+  ============================================= -->
+  <header class="cabecera-pagina">
+    <div class="contenedor">
+      <h1>Todos los coches</h1>
+      <p>Filtra y encuentra el que encaje contigo</p>
+    </div>
+  </header>
+
+  <!-- =============================================
+       BARRA DE FILTROS
+       fondo gris con una linea abajo para separarlo
+       del catalogo. tiene 3 cosas que el usuario
+       puede cambiar y jquery escucha en tiempo real:
+         - campo de texto para buscar marca o modelo
+         - selector de tipo de combustible
+         - boton para resetear todo
+  ============================================= -->
+
+    <div class="contenedor">
+      <div class="fila-filtros">
+
+        <!-- buscador de texto libre -->
+        <div class="grupo-filtro">
+          <label for="filtro-busqueda">¿Qué buscas?</label>
+          <input type="text" id="filtro-busqueda" class="campo-texto" placeholder="Marca o modelo..." />
+        </div>
+
+        <!-- desplegable de combustible -->
+        <div class="grupo-filtro">
+          <label for="filtro-combustible">Combustible</label>
+          <select id="filtro-combustible" class="campo-select">
+            <option value="">Todos</option>
+            <option>Gasolina</option>
+            <option>Diésel</option>
+            <option>Eléctrico</option>
+            <option>Híbrido</option>
+          </select>
+        </div>
+
+        <!-- boton para limpiar todos los filtros a la vez -->
+        <div class="grupo-filtro" style="flex:0">
+          <label>&nbsp;</label>
+          <button id="btn-limpiar" class="boton boton-borde">Limpiar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       REJILLA DE COCHES
+       el parrafo del contador dice cuantos coches
+       hay con los filtros actuales.
+       la rejilla empieza vacia, jquery la rellena.
+       el div de "sin coincidencias" esta oculto
+       y solo aparece cuando no hay resultados
+  ============================================= -->
+  <section class="seccion">
+    <div class="contenedor">
+
+      <!-- aqui jquery escribe "8 coches" o "3 coches" etc -->
+      <p class="contador-resultados" id="contador"></p>
+
+      <!-- contenedor vacio que jquery llena con tarjetas -->
+      <div class="rejilla-coches" id="rejilla-catalogo"></div>
+
+      <!-- esto solo se ve cuando ningun coche pasa los filtros -->
+      <div class="sin-coincidencias" id="sin-coincidencias">
+        <p>Nada con esos filtros.</p>
+        <button id="btn-limpiar-2" class="boton boton-oscuro">Ver todos</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       MODAL (ventana flotante de la ficha)
+       el fondo oscuro cubre toda la pantalla.
+       se abre añadiendo la clase "visible" con jquery
+       y se cierra quitandola. se puede cerrar de 3
+       formas: el aspa, el boton cerrar, o clickando
+       fuera en el fondo oscuro
+  ============================================= -->
+  <div class="fondo-oscuro" id="fondo-oscuro">
+    <div class="ventana-ficha">
+
+      <!-- cabecera del modal con el nombre del coche y la x -->
+      <div class="ventana-cabecera">
+        <h5 id="titulo-ficha"></h5>
+        <button class="boton-cerrar" id="btn-cerrar-ficha">✕</button>
+      </div>
+
+      <!-- aqui jquery mete la foto, la tabla y la descripcion del coche -->
+      <div class="ventana-cuerpo" id="contenido-ficha"></div>
+
+      <!-- botones de abajo del modal -->
+      <div class="ventana-pie">
+        <a href="contacto.html" class="boton boton-rojo">¿Te interesa? Escríbenos</a>
+        <button class="boton boton-borde" id="btn-cerrar-ficha-2">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="pie-pagina">
+    <div class="contenedor">
+      <strong>Catálogo</strong>
+      <p>Proyecto educativo · HTML, CSS y JavaScript</p>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/coches.js"></script>
+  <script>
+    $(function () {
+
+      // -----------------------------------------------
+      // mostrarTarjetas(lista)
+      // recibe el array ya filtrado, vacia la rejilla
+      // y pone una tarjeta por cada coche.
+      // tambien actualiza el contador y muestra
+      // el mensaje de "sin resultados" si hace falta
+      // -----------------------------------------------
+      function mostrarTarjetas(lista) {
+        $("#rejilla-catalogo").empty(); // borramos las tarjetas anteriores
+        $("#contador").text(lista.length + " coche" + (lista.length !== 1 ? "s" : ""));
+        $("#sin-coincidencias").toggle(lista.length === 0); // mostrar u ocultar segun haya resultados
+
+        $.each(lista, function (i, c) {
+          const km = c.km === 0 ? "Nuevo" : c.km.toLocaleString("es-ES") + " km";
+          $("#rejilla-catalogo").append(`
+            <div class="tarjeta-coche">
+              <div class="tarjeta-imagen-envoltorio">
+                <img src="${c.imagen}" class="imagen-coche" alt="${c.marca} ${c.modelo}" />
+                <span class="etiqueta-combustible">${c.combustible}</span>
+              </div>
+              <div class="tarjeta-cuerpo">
+                <div class="tarjeta-marca">${c.marca}</div>
+                <div class="tarjeta-modelo">${c.modelo}</div>
+                <div class="tarjeta-datos">${c.año} · ${c.potencia} CV · ${km}</div>
+                <div class="tarjeta-pie">
+                  <span class="tarjeta-precio">${c.precio.toLocaleString("es-ES")} €</span>
+                  <!-- data-id guarda el id para saber que ficha abrir al clickar -->
+                  <button class="boton boton-oscuro boton-pequeno btn-ver-ficha" data-id="${c.id}">Ver ficha</button>
+                </div>
+              </div>
+            </div>`);
+        });
+      }
+
+      // -----------------------------------------------
+      // aplicarFiltros()
+      // lee lo que hay en los 3 controles y filtra
+      // el array de coches con eso. se llama cada vez
+      // que el usuario toca cualquier filtro
+      // -----------------------------------------------
+      function aplicarFiltros() {
+        const texto = $("#filtro-busqueda").val().toLowerCase(); // lo que escribio el usuario
+        const comb  = $("#filtro-combustible").val();            // "" si eligio "Todos"
+        const max   = parseInt($("#filtro-precio").val());       // precio maximo del slider
+        mostrarTarjetas(coches.filter(c =>
+        (c.marca + c.modelo).toLowerCase().includes(texto) &&
+        (!comb || c.combustible === comb)
+        ));
+      }
+
+      // -----------------------------------------------
+      // limpiarFiltros()
+      // devuelve todos los controles a como estaban
+      // al principio y muestra todos los coches
+      // -----------------------------------------------
+      function limpiarFiltros() {
+        $("#filtro-busqueda").val("");
+        $("#filtro-combustible").val("");
+        mostrarTarjetas(coches);
+      }
+
+      // -----------------------------------------------
+      // abrirFicha(id)
+      // busca el coche por su id, mete sus datos
+      // en el modal y lo hace visible
+      // -----------------------------------------------
+      function abrirFicha(id) {
+        const c = coches.find(x => x.id === id);
+        const km = c.km === 0 ? "Nuevo" : c.km.toLocaleString("es-ES") + " km";
+        $("#titulo-ficha").text(c.marca + " " + c.modelo);
+        $("#contenido-ficha").html(`
+          <div class="ficha-interior">
+            <img src="${c.imagen}" class="ficha-imagen" alt="${c.marca} ${c.modelo}" />
+            <table class="tabla-datos">
+              <tr><th>Año</th><td>${c.año}</td></tr>
+              <tr><th>Potencia</th><td>${c.potencia} CV</td></tr>
+              <tr><th>Combustible</th><td>${c.combustible}</td></tr>
+              <tr><th>Kilómetros</th><td>${km}</td></tr>
+              <tr><th>Color</th><td>${c.color}</td></tr>
+              <tr><th>Precio</th><td><strong>${c.precio.toLocaleString("es-ES")} €</strong></td></tr>
+            </table>
+            <p class="ficha-descripcion">${c.descripcion}</p>
+          </div>`);
+        // añadir "visible" activa el display:flex del overlay en el css
+        $("#fondo-oscuro").addClass("visible");
+      }
+
+      // quita la clase visible y el modal desaparece
+      function cerrarFicha() {
+        $("#fondo-oscuro").removeClass("visible");
+      }
+
+      // -- eventos --
+
+      // cada vez que se escribe algo en el buscador
+      $("#filtro-busqueda").on("input", aplicarFiltros);
+
+      // cuando cambia el desplegable de combustible
+      $("#filtro-combustible").on("change", aplicarFiltros);
+
+      // los dos botones de limpiar (el de la barra y el del mensaje vacio)
+      $("#btn-limpiar, #btn-limpiar-2").on("click", limpiarFiltros);
+
+      // los dos botones de cerrar el modal
+      $("#btn-cerrar-ficha, #btn-cerrar-ficha-2").on("click", cerrarFicha);
+
+      // cerrar el modal si se clicka en el fondo oscuro pero no en la tarjeta
+      $("#fondo-oscuro").on("click", function (e) {
+        if ($(e.target).is("#fondo-oscuro")) cerrarFicha();
+      });
+
+      // delegacion de eventos: los botones "ver ficha" se crean despues
+      // de cargar la pagina entonces no podemos ponerles el evento directamente
+      $(document).on("click", ".btn-ver-ficha", function () {
+        abrirFicha(parseInt($(this).data("id")));
+      });
+
+      // al cargar la pagina mostramos todos los coches sin filtrar
+      mostrarTarjetas(coches);
+    });
+  </script>
+</body>
+</html>
