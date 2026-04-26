@@ -236,13 +236,6 @@ body {
   font-size: 1.1rem;
 }
 
-/* ---- BARRA DE FILTROS ---- */
-.barra-filtros {
-  background: white;
-  border-bottom: 1px solid white;
-  padding: 1rem 0;
-}
-
 .fila-filtros {
   display: flex;
   flex-wrap: wrap;
